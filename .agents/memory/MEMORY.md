@@ -1,0 +1,1 @@
+- [Dealer 1st brand boundary](dealer-1st-brand-boundary.md) — keep the product identity, copy, and navigation centered on Dealer 1st rather than the original reference site.

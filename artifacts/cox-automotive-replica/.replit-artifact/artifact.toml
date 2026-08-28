@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Cox Automotive Replica"
+description = "A high-fidelity homepage replica of Cox Automotive for design upgrade exploration, with the source site's brand language, imagery, navigation, and interactive presentation."
+version = "1.0.0"
+id = "artifacts/cox-automotive-replica"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 26259
+
+[services.development]
+run = "pnpm --filter @workspace/cox-automotive-replica run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/cox-automotive-replica", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/cox-automotive-replica/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "26259"
+BASE_PATH = "/"
