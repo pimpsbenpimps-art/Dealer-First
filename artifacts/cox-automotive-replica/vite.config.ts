@@ -69,6 +69,9 @@ export default defineConfig({
     strictPort: true,
     host: '0.0.0.0',
     allowedHosts: true,
+    proxy: {
+      '/api': process.env.API_SERVER_URL || 'http://localhost:8080',
+    },
     fs: {
       strict: true,
     },
