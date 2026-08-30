@@ -68,7 +68,7 @@ function SectionIntro({ eyebrow, title, copy, action }: { eyebrow: string; title
 }
 
 function ImageBand({ image, label, title, copy, flip = false }: { image: string; label: string; title: string; copy: string; flip?: boolean }) {
-  return <section className={`image-band ${flip ? 'flip' : ''}`}><div className="image-band-image"><img src={asset(image)} alt="" /></div><div className="image-band-copy"><div className="eyebrow">{label}</div><h2>{title}</h2><p>{copy}</p></div></section>;
+  return <section className={`image-band ${flip ? 'flip' : ''}`}><div className="image-band-image"><img src={asset(image)} alt={title} /></div><div className="image-band-copy"><div className="eyebrow">{label}</div><h2>{title}</h2><p>{copy}</p></div></section>;
 }
 
 function Home({ onNavigate }: { onNavigate: (path: Route) => void }) {
@@ -179,7 +179,25 @@ function App() {
   useEffect(() => { const onPop = () => { setRoute(pathFromLocation()); window.scrollTo(0, 0); }; window.addEventListener('popstate', onPop); return () => window.removeEventListener('popstate', onPop); }, []);
   const navigate = (next: Route) => { const url = `${base}${next === '/' ? '/' : next}`; window.history.pushState({}, '', url); setRoute(next); window.scrollTo({ top: 0, behavior: 'smooth' }); };
   const page = route === '/' ? <><Home onNavigate={navigate} /><SecuritySection onNavigate={navigate} /><DiagnosticBand onNavigate={navigate} /></> : route === '/about-us' ? <><About onNavigate={navigate} /><WhyDealers /></> : route === '/services' ? <><Services onNavigate={navigate} /><DetailedServices /></> : route === '/process' ? <><Process onNavigate={navigate} /><ExpandedProcess /></> : route === '/testimonials' ? <Testimonials onNavigate={navigate} /> : route === '/contact' ? <Contact onNavigate={navigate} /> : <LegalPage type={route === '/privacy-policy' || route === '/privacy' ? 'privacy' : 'sms'} />;
-  useEffect(() => { const titles: Record<Route, string> = { '/': 'Dealer 1st | Built for the independent dealer', '/about-us': 'About Dealer 1st | Independent by design', '/services': 'Services | Dealer 1st', '/process': 'Process | Dealer 1st', '/testimonials': 'Testimonials | Dealer 1st', '/contact': 'Contact Dealer 1st', '/privacy': 'Privacy Policy | Dealer 1st', '/privacy-policy': 'Privacy Policy | Dealer 1st', '/sms-terms': 'SMS Terms & Conditions | Dealer 1st' }; document.title = titles[route]; }, [route]);
+  useEffect(() => {
+  const titles: Record<Route, string> = { '/': 'Dealer 1st | Built for the independent dealer', '/about-us': 'About Dealer 1st | Independent by design', '/services': 'Services | Dealer 1st', '/process': 'Process | Dealer 1st', '/testimonials': 'Testimonials | Dealer 1st', '/contact': 'Contact Dealer 1st', '/privacy': 'Privacy Policy | Dealer 1st', '/privacy-policy': 'Privacy Policy | Dealer 1st', '/sms-terms': 'SMS Terms & Conditions | Dealer 1st' };
+  const descriptions: Record<Route, string> = {
+    '/': 'Dealers 1st provides remote BDC, sales, finance and F&I support to independent used-car dealerships across the United States.',
+    '/about-us': 'Dealer 1st works alongside independent dealerships and automotive operators who want a more dependable way to manage the work between an opportunity and a delivered vehicle.',
+    '/services': 'Choose one focused service or bring the pieces together: BDC support, sales support, and finance/F&I processing for independent dealerships.',
+    '/process': 'A straightforward four-step engagement: listen first, build the plan, work the system, tune the details.',
+    '/testimonials': 'Real results from independent dealerships working with the team behind Dealers 1st.',
+    '/contact': 'Book a free dealership diagnostic. Tell us where your operation feels stuck and we will bring a clear point of view.',
+    '/privacy': 'Dealers 1st LLC privacy policy.',
+    '/privacy-policy': 'Dealers 1st LLC privacy policy.',
+    '/sms-terms': 'Dealers 1st LLC SMS terms and conditions.',
+  };
+  document.title = titles[route];
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription) metaDescription.setAttribute('content', descriptions[route]);
+  const canonical = document.querySelector('link[rel="canonical"]');
+  if (canonical) canonical.setAttribute('href', `https://www.dealersf1rst.com${route === '/' ? '/' : route}`);
+}, [route]);
   return <QueryClientProvider client={queryClient}><TooltipProvider><ErrorBoundary><div className="site"><Header active={route} onNavigate={navigate} /><main key={route}>{page}</main><Footer onNavigate={navigate} /></div></ErrorBoundary><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
